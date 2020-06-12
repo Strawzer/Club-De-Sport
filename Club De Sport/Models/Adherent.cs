@@ -33,9 +33,6 @@ namespace Club_De_Sport.Models
         [Required]
         public string TelUrgence { get; set; }
 
-        public int UserId { get; set; }
-        public User User { get; set; }
-
         // Implementation de l'association Reserver 1,10 (Many To Many)
         public virtual ICollection<Seance> Seances { get; set; }
 

@@ -207,10 +207,6 @@
     <Compile Include="Migrations\202006121218259_AddExpirationDateSubscribtionToAdherentTable.designer.cs">
       <DependentUpon>202006121218259_AddExpirationDateSubscribtionToAdherentTable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202006121748099_FixingUserReferenceInAdherentTable.cs" />
-    <Compile Include="Migrations\202006121748099_FixingUserReferenceInAdherentTable.designer.cs">
-      <DependentUpon>202006121748099_FixingUserReferenceInAdherentTable.cs</DependentUpon>
-    </Compile>
     <Compile Include="Models\User.cs" />
     <Compile Include="SharedForms\About.cs">
       <SubType>Form</SubType>
@@ -371,9 +367,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202006121218259_AddExpirationDateSubscribtionToAdherentTable.resx">
       <DependentUpon>202006121218259_AddExpirationDateSubscribtionToAdherentTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202006121748099_FixingUserReferenceInAdherentTable.resx">
-      <DependentUpon>202006121748099_FixingUserReferenceInAdherentTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SharedForms\About.resx">
       <DependentUpon>About.cs</DependentUpon>

@@ -19,16 +19,7 @@ namespace Club_De_Sport.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder
-                .Entity<User>()
-                .HasOptional(u => u.Adherent)
-                .WithRequired(a => a.User);
-            
-            
-
             base.OnModelCreating(modelBuilder);
-
-
         }
     }
 }

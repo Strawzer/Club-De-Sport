@@ -53,6 +53,8 @@ namespace Club_De_Sport.AdminForms
                     // bind data to the cb collection of values
                     activitiesCB.DataSource = activities;
                 }
+                currentCoach = coachBindingSource.Current as Coach;
+                currentSeance = seanceBindingSource.Current as Seance;
             }
 
             // disable form for input security control
@@ -137,15 +139,23 @@ namespace Club_De_Sport.AdminForms
         {
             if (currentSeance != null && currentCoach != null)
             {
-                using (ClubDbContext context = new ClubDbContext())
+                try
                 {
-                    var coachInDb = context.Coaches.SingleOrDefault(c => c.CodeCoach == currentCoach.CodeCoach);
-                    var seanceInDb = context.Seances.SingleOrDefault(s => s.CodeSeance == currentSeance.CodeSeance);
-                    if( coachInDb != null && seanceInDb != null)
+                    using (ClubDbContext context = new ClubDbContext())
                     {
-                        coachInDb.Seances.Add(seanceInDb);
-                        context.SaveChanges();
+                        var coachInDb = context.Coaches.SingleOrDefault(c => c.CodeCoach == currentCoach.CodeCoach);
+                        var seanceInDb = context.Seances.SingleOrDefault(s => s.CodeSeance == currentSeance.CodeSeance);
+                        if (coachInDb != null && seanceInDb != null)
+                        {
+                            coachInDb.Seances.Add(seanceInDb);
+                            context.SaveChanges();
+                        }
                     }
+                }
+                catch(Exception ex)
+                {
+                    MessageBox
+                        .Show(ex.Message);
                 }
             }
             else

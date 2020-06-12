@@ -262,18 +262,30 @@ namespace Club_De_Sport.AdminForms
         {
             if (currentSeance != null && currentAdh != null)
             {
-                using (ClubDbContext context = new ClubDbContext())
+                try
                 {
-                    var adherentInDb = context.Users.Include(u => u.Adherent)
-                        .SingleOrDefault(u => u.AdherentId == currentAdh.CodeAdh)
-                        .Adherent;
-                    var seanceInDb = context.Seances.Include(s => new { s.Adherents, s.Activites})
-                        .SingleOrDefault(s => s.CodeSeance == currentSeance.CodeSeance);
-                    if(seanceInDb != null && adherentInDb != null)
+                    using (ClubDbContext context = new ClubDbContext())
                     {
-                        adherentInDb.Seances.Add(currentSeance);
-                        context.SaveChanges();
+                        var UserInDb = context.Users.Include(u => u.Adherent)
+                            .SingleOrDefault(u => u.AdherentId == currentAdh.CodeAdh)
+                            .Adherent;
+                        var adherentInDb = context.Adherents.Include(a => a.PreferredActivities)
+                            .Include(a => a.Seances)
+                            .SingleOrDefault(a => a.CodeAdh == UserInDb.CodeAdh);
+                        var seanceInDb = context.Seances.Include(s => s.Activites)
+                            .Include( s => s.Coach)
+                            .Include( s=> s.Salle)
+                            .SingleOrDefault(s => s.CodeSeance == currentSeance.CodeSeance);
+                        if (seanceInDb != null && adherentInDb != null)
+                        {
+                            adherentInDb.Seances.Add(currentSeance);
+                            context.SaveChanges();
+                        }
                     }
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
                 }
             }
             else

@@ -310,7 +310,7 @@ namespace Club_De_Sport
                     UpdateCurrentUser();
                     form = Activator.CreateInstance(typeName, currentUser) as ClientForms.Profile;
                 }
-                else if( e.ClickedButtonIcon.Text == "Activites"
+                else if( e.ClickedButtonIcon.Text == "Activities"
                     && e.Namespace == "Club_De_Sport.ClientForms")
                 {
                     UpdateCurrentUser();

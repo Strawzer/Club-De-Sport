@@ -107,7 +107,7 @@ namespace Club_De_Sport.AdminForms
                 {
                     Email = newAdh.Nom + newAdh.Prenom + "@mail.com",
                     Password = Crypto.HashPassword("Client123"),
-                    Role = User.Client,
+                    Role = User.NonPayedClient,
                 };
                 // All is valid let's attach adherent informations to the user
                 using (ClubDbContext _context = new ClubDbContext())
@@ -237,24 +237,47 @@ namespace Club_De_Sport.AdminForms
             // Get current adherent
             Adherent adhToRemove = adherentBindingSource.Current as Adherent;
             // Get adherent to remove from db
-            using (ClubDbContext context = new ClubDbContext())
+            try
             {
-                if (context.Users.Any(u => u.AdherentId == adhToRemove.CodeAdh))
+                using (ClubDbContext context = new ClubDbContext())
                 {
-                    var userInDb = context.Users
-                        .SingleOrDefault(u => u.AdherentId == adhToRemove.CodeAdh);
-                    context.Users.Remove(userInDb);
-                    await context.SaveChangesAsync();
-                }
-                if(context.Adherents.Any(a => a.CodeAdh == adhToRemove.CodeAdh))
-                {
-                    var adhInDb = context.Adherents
+                    var userToDelete = context.Users
+                                .Include(u => u.Adherent)
+                                .SingleOrDefault(u => u.AdherentId == adhToRemove.CodeAdh);
+                    var correspondingAdherent = context.Adherents
+                        .Include(u => u.PreferredActivities)
+                        .Include(u => u.Seances)
                         .SingleOrDefault(a => a.CodeAdh == adhToRemove.CodeAdh);
-                    context.Adherents.Remove(adhInDb);
-                    await context.SaveChangesAsync();
+                    var prefActivities = correspondingAdherent.PreferredActivities.ToList();
+                    foreach (var act in prefActivities)
+                    {
+                        correspondingAdherent.PreferredActivities.Remove(act);
+                    }
+                    var seances = correspondingAdherent.Seances.ToList();
+                    foreach (var seance in seances)
+                    {
+                        correspondingAdherent.Seances.Remove(seance);
+                    }
+                    context.Adherents.Remove(correspondingAdherent);
+                    context.SaveChanges();
+                    context.Users.Remove(userToDelete);
+                    context.SaveChanges();
                 }
+                adherents_Load(sender, e);
             }
-            adherents_Load(sender, e);
+            catch (ArgumentNullException ex)
+            {
+                MetroFramework.MetroMessageBox.Show(this,
+                        "Aucun adhérent n'est séléctionnée ou bien la" +
+                        " base de données est vide.",
+                        "Pas d'adhérent séléctionné",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         // Affecter un emploi

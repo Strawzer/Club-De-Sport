@@ -276,8 +276,7 @@ namespace Club_De_Sport.ClientForms
 
         private void ActivityFormInitializeText()
         {
-            ActivitiesCB.SelectedIndex = 0;
-            CoachsCB.SelectedIndex = 0;
+            
         }
 
         // bind the second cb with coachs in db related to this activity

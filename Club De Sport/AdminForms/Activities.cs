@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.Entity;
 
 namespace Club_De_Sport.AdminForms
 {
@@ -176,14 +177,35 @@ namespace Club_De_Sport.AdminForms
         {
             // Perform Delete Logic
             var seanceToDelete = seanceBindingSource.Current as Seance;
-            if(seanceToDelete != null)
+            try
             {
-                using (ClubDbContext context = new ClubDbContext())
+                if (seanceToDelete != null)
                 {
-                    var seanceInDb = context.Seances.SingleOrDefault(s => s.CodeSeance == seanceToDelete.CodeSeance);
-                    context.Seances.Remove(seanceInDb);
-                    context.SaveChanges();
+                    using (ClubDbContext context = new ClubDbContext())
+                    {
+                        var seanceInDb = context.Seances
+                            .Include(s => s.Activites)
+                            .Include(s => s.Adherents)
+                            .SingleOrDefault(s => s.CodeSeance == seanceToDelete.CodeSeance);
+                        var adherents = seanceInDb.Adherents.ToList();
+                        var activites = seanceInDb.Activites.ToList();
+                        foreach (var activity in activites)
+                        {
+                            seanceInDb.Activites.Remove(activity);
+                        }
+                        foreach (var adherent in adherents)
+                        {
+                            seanceInDb.Adherents.Remove(adherent);
+                        }
+                        context.Seances.Remove(seanceInDb);
+                        context.SaveChanges();
+                    }
+                    Activities_Load(sender, e);
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 

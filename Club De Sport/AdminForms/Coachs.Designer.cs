@@ -430,6 +430,7 @@
             this.SexeCB.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.SexeCB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(33)))), ((int)(((byte)(74)))));
             this.SexeCB.DataBindings.Add(new System.Windows.Forms.Binding("SelectedItem", this.coachBindingSource, "Sexe", true));
+            this.SexeCB.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.coachBindingSource, "Sexe", true));
             this.SexeCB.DropDownWidth = 200;
             this.SexeCB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SexeCB.Font = new System.Drawing.Font("Arial", 12F);

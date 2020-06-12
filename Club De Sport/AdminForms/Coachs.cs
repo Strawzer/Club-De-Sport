@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Data.Entity;
 
 namespace Club_De_Sport.AdminForms
 {
@@ -143,13 +144,29 @@ namespace Club_De_Sport.AdminForms
                 {
                     using (ClubDbContext context = new ClubDbContext())
                     {
-                        var coachInDb = context.Coaches.SingleOrDefault(c => c.CodeCoach == currentCoach.CodeCoach);
-                        var seanceInDb = context.Seances.SingleOrDefault(s => s.CodeSeance == currentSeance.CodeSeance);
+                        var coachInDb = context.Coaches
+                            .Include(c => c.Activites)
+                            .Include(c => c.Seances)
+                            .SingleOrDefault(c => c.CodeCoach == currentCoach.CodeCoach);
+
+                        var seanceInDb = context.Seances
+                            .Include(s => s.Coach)
+                            .Include(s => s.Activites)
+                            .Include(s => s.Salle)
+                            .SingleOrDefault(s => s.CodeSeance == currentSeance.CodeSeance);
                         if (coachInDb != null && seanceInDb != null)
                         {
                             coachInDb.Seances.Add(seanceInDb);
                             context.SaveChanges();
                         }
+                        MetroFramework.MetroMessageBox.Show(this,
+                        "La séance dont le code est " + seanceInDb.CodeSeance
+                        + " qui a comme horaire: " + seanceInDb.DebutSeance
+                        + " a bien été associée au coach: " + coachInDb.Nom +
+                        " " + coachInDb.Prenom + " !",
+                        "Séance afféctée avec succés",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
                     }
                 }
                 catch(Exception ex)

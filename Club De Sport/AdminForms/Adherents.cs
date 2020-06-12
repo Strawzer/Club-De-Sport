@@ -301,10 +301,20 @@ namespace Club_De_Sport.AdminForms
                             .SingleOrDefault(s => s.CodeSeance == currentSeance.CodeSeance);
                         if (seanceInDb != null && adherentInDb != null)
                         {
-                            adherentInDb.Seances.Add(currentSeance);
+                            adherentInDb.Seances.Add(seanceInDb);
                             context.SaveChanges();
                         }
+                        MetroFramework.MetroMessageBox.Show(this,
+                        "La séance dont le code est " + seanceInDb.CodeSeance 
+                        + " et qui a comme coach: " + seanceInDb.Coach.Nom
+                        + " et qui a comme horaire: " + seanceInDb.DebutSeance
+                        + " a bien été associée au client: "+ adherentInDb.Nom +
+                        " " + adherentInDb.Prenom + " !",
+                        "Séance afféctée avec succés",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
                     }
+                    
                 }
                 catch(Exception ex)
                 {

@@ -16,11 +16,17 @@ namespace Club_De_Sport.AdminForms
 
         // To display verify input data errors to the user
         private BindingList<string> UserErrors;
+
+        private Coach currentCoach;
+        private Seance currentSeance;
         public Coachs()
         {
             InitializeComponent();
             UserErrors = new BindingList<string>();
             activities = new BindingList<string>();
+
+            currentCoach = new Coach();
+            currentSeance = new Seance();
             // Disable Code Adhérant
             CodeAdhTB.Enabled = false;
             CodeAdhIcon.Enabled = false;
@@ -129,9 +135,6 @@ namespace Club_De_Sport.AdminForms
         // Affect Seance to coach logic
         private void AffecterSeanceBtn_Click(object sender, EventArgs e)
         {
-            var currentCoach = coachBindingSource.Current as Coach;
-            var currentSeance = seanceBindingSource.Current as Seance;
-
             if (currentSeance != null && currentCoach != null)
             {
                 using (ClubDbContext context = new ClubDbContext())
@@ -362,5 +365,14 @@ namespace Club_De_Sport.AdminForms
 
         }
 
+        private void CoachDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            currentCoach = coachBindingSource.Current as Coach;
+        }
+
+        private void SeancesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            currentSeance = seanceBindingSource.Current as Seance;
+        }
     }
 }

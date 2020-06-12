@@ -23,6 +23,9 @@ namespace Club_De_Sport.ClientForms
         private void UnsubscribeBtn_Click(object sender, EventArgs e)
         {
             // Perform Unsubscribe Logic
+            if(UnsubscribeTB.Text != string.Empty)
+            {
+            }
 
         }
     }

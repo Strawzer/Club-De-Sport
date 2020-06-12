@@ -7,6 +7,8 @@ using System.Drawing;
 using System.Linq;
 using System.Web.Helpers;
 using System.Windows.Forms;
+using System.Data.Entity;
+     
 
 namespace Club_De_Sport.AdminForms
 {
@@ -14,11 +16,14 @@ namespace Club_De_Sport.AdminForms
     {
         // To display verify input data errors to the user
         private BindingList<string> UserErrors;
+        private Adherent currentAdh;
+        private Seance currentSeance;
         public Adherents()
         {
             InitializeComponent();
             UserErrors = new BindingList<string>();
-
+            currentSeance = new Seance();
+            currentAdh = new Adherent();
             // Disable Code Adhérant
             CodeAdhTB.Enabled = false;
             CodeAdhIcon.Enabled = false;
@@ -38,6 +43,8 @@ namespace Club_De_Sport.AdminForms
                 adherentBindingSource.DataSource = context.Adherents.ToList();
                 seanceBindingSource.DataSource = context.Seances.ToList();
             }
+            currentAdh = adherentBindingSource.Current as Adherent;
+            currentSeance = seanceBindingSource.Current as Seance;
         }
 
         // Add New Adherent to db
@@ -253,15 +260,15 @@ namespace Club_De_Sport.AdminForms
         // Affecter un emploi
         private void AffecterSeanceBtn_Click_1(object sender, EventArgs e)
         {
-            var currentAdh = adherentBindingSource.Current as Adherent;
-            var currentSeance = adherentBindingSource.Current as Seance;
-
             if (currentSeance != null && currentAdh != null)
             {
                 using (ClubDbContext context = new ClubDbContext())
                 {
-                    var adherentInDb = context.Adherents.SingleOrDefault(a => a.CodeAdh == currentAdh.CodeAdh);
-                    var seanceInDb = context.Seances.SingleOrDefault(s => s.CodeSeance == currentSeance.CodeSeance);
+                    var adherentInDb = context.Users.Include(u => u.Adherent)
+                        .SingleOrDefault(u => u.AdherentId == currentAdh.CodeAdh)
+                        .Adherent;
+                    var seanceInDb = context.Seances.Include(s => new { s.Adherents, s.Activites})
+                        .SingleOrDefault(s => s.CodeSeance == currentSeance.CodeSeance);
                     if(seanceInDb != null && adherentInDb != null)
                     {
                         adherentInDb.Seances.Add(currentSeance);
@@ -458,6 +465,16 @@ namespace Club_De_Sport.AdminForms
             AdresseTB.Text = "Adresse";
             VilleTB.Text = "Ville";
             CneTB.Text = "CNE Pour Bénificier d'une réduction étudiant";
+        }
+
+        private void CoachDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            currentAdh = adherentBindingSource.Current as Adherent;
+        }
+
+        private void SeancesDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            currentSeance = adherentBindingSource.Current as Seance;
         }
     }
 }

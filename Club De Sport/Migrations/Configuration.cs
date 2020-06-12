@@ -14,6 +14,7 @@
             AutomaticMigrationsEnabled = false;
         }
 
+
         protected override void Seed(Club_De_Sport.Models.ClubDbContext context)
         {
             context.Users.AddOrUpdate(u => new { u.Email, u.Role },

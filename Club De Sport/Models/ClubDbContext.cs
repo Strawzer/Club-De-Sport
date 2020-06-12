@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.Office.Interop.Excel;
+using System.Data.Entity;
 
 namespace Club_De_Sport.Models
 {
@@ -18,6 +19,13 @@ namespace Club_De_Sport.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder
+                .Entity<User>()
+                .HasOptional(u => u.Adherent)
+                .WithRequired(a => a.User);
+            
+            
+
             base.OnModelCreating(modelBuilder);
 
 

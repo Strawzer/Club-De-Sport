@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
@@ -21,6 +22,8 @@ namespace Club_De_Sport.Models
         public string Adresse { get; set; }
 
         public string Ville { get; set; }
+
+        public DateTime? ExpirationDate { get; set; }
 
         [Required]
         public string Tel { get; set; }
